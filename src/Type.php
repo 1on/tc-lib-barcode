@@ -171,7 +171,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      * @param  float $ratio ration of big and small bars
      * @return void
      */
-    public function cahngeRatio($ratio)
+    public function changeRatio($ratio)
     {
         $offset = 0;
         $newOffset = 0;
