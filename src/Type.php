@@ -46,7 +46,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      * @var string
      */
     protected $format = '';
-    
+
     /**
      * Array containing extra parameters for the specified barcode type
      *
@@ -89,7 +89,7 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      * @var float
      */
     protected $width;
-    
+
     /**
      * Barcode height
      *
@@ -104,21 +104,21 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      * @var array
      */
     protected $padding = array('T' => 0, 'R' => 0, 'B' => 0, 'L' => 0);
-    
+
     /**
      * Ratio between the barcode width and the number of rows
      *
      * @var float
      */
     protected $width_ratio;
-    
+
     /**
      * Ratio between the barcode height and the number of columns
      *
      * @var float
      */
     protected $height_ratio;
-    
+
     /**
      * Color object
      *
@@ -166,6 +166,37 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
     }
 
     /**
+     * Fixes ratio of generated barcode
+     *
+     * @param  float $ratio ration of big and small bars
+     * @return void
+     */
+    public function cahngeRatio($ratio)
+    {
+        $offset = 0;
+        $newOffset = 0;
+        foreach ($this->bars as $key => $bar) {
+            if ($bar[2] == 2) {
+                $this->bars[$key][2] = $ratio;
+            }
+
+            if ($bar[0] - $offset == 2) {
+                $offset = $bar[0] + $bar[2];
+                $this->bars[$key][0] = $newOffset + $ratio;
+            } elseif ($bar[0] != 0) {
+                $offset = $bar[0] + $bar[2];
+                $this->bars[$key][0] = $newOffset + 1;
+            } else {
+                $offset = $bar[0] + $bar[2];
+            }
+            $newOffset = $this->bars[$key][0] + $this->bars[$key][2];
+        }
+        $this->ncols = $newOffset;
+
+        return $this;
+    }
+
+    /**
      * Set the bars array
      *
      * @throws BarcodeException in case of error
@@ -184,12 +215,12 @@ abstract class Type extends \Com\Tecnick\Barcode\Type\Convert
      */
     public function setSize($width, $height, $padding = array(0, 0, 0, 0))
     {
-        $this->width = intval($width);
+        $this->width = $width;
         if ($this->width <= 0) {
             $this->width = (abs(min(-1, $this->width)) * $this->ncols);
         }
 
-        $this->height = intval($height);
+        $this->height = $height;
         if ($this->height <= 0) {
             $this->height = (abs(min(-1, $this->height)) * $this->nrows);
         }
