@@ -1,5 +1,5 @@
 {
-    "name": "1on/tc-lib-barcode",
+    "name": "intaro/tc-lib-barcode",
     "description": "PHP library to generate linear and bidimensional barcodes",
     "type": "library",
     "homepage": "http://www.tecnick.com",
